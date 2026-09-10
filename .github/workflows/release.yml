@@ -1,7 +1,7 @@
 name: Release Protocol
 on:
   push:
-    tags: ['v*']
+    branches: [main]
 permissions:
   contents: read
 concurrency:
@@ -18,16 +18,48 @@ jobs:
       - uses: actions/setup-dotnet@v6
         with:
           dotnet-version: '10.0.x'
-      - name: Validate tag
-        shell: bash
+      - name: Read package version
+        id: version
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          [[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] || exit 1
-          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          $version = ([xml](Get-Content src/YuJanggiCommon/YuJanggiCommon.csproj -Raw)).Project.PropertyGroup.Version | Select-Object -First 1
+          if ($version -cnotmatch '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$') { throw 'Invalid version' }
+          "VERSION=$version" >> $env:GITHUB_ENV
+          "RELEASE_TAG=v$version" >> $env:GITHUB_ENV
+          $release = gh release view "v$version" --json isDraft 2>$null
+          if ($LASTEXITCODE -eq 0 -and -not ($release | ConvertFrom-Json).isDraft) {
+            "skip=true" >> $env:GITHUB_OUTPUT
+            exit 0
+          }
+          $refs = git ls-remote origin "refs/tags/v$version"
+          if ($LASTEXITCODE -ne 0) { throw 'Cannot read tags' }
+          if ($refs) {
+            git fetch origin "refs/tags/v$version"
+            if ($LASTEXITCODE -ne 0) { throw 'Cannot fetch tag' }
+            $commit = git rev-parse 'FETCH_HEAD^{commit}'
+            if ($LASTEXITCODE -ne 0 -or $commit -ne $env:GITHUB_SHA) { throw 'Rerun original release or bump version' }
+          }
+          exit 0
       - name: Test and build packages
+        if: steps.version.outputs.skip != 'true'
         shell: pwsh
         run: ./scripts/Build-Packages.ps1 -Version $env:VERSION
+      - name: Reserve tag and draft release
+        if: steps.version.outputs.skip != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -z "$(git ls-remote origin "refs/tags/$RELEASE_TAG")" ]; then
+            git tag "$RELEASE_TAG" "$GITHUB_SHA"
+            git push origin "refs/tags/$RELEASE_TAG"
+          fi
+          if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" --verify-tag --draft --title "$RELEASE_TAG" --generate-notes
+          fi
       - name: Publish NuGet
+        if: steps.version.outputs.skip != 'true'
         env:
           PACKAGE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -35,6 +67,7 @@ jobs:
             --source "https://nuget.pkg.github.com/$GITHUB_REPOSITORY_OWNER/index.json" \
             --api-key "$PACKAGE_TOKEN" --skip-duplicate
       - name: Publish immutable UPM tag
+        if: steps.version.outputs.skip != 'true'
         shell: bash
         run: |
           TAG="upm/v$VERSION"
@@ -56,10 +89,12 @@ jobs:
           git tag "$TAG" "$COMMIT"
           git push origin "refs/tags/$TAG"
       - name: Attach downloadable packages
+        if: steps.version.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if ! gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            gh release create "$GITHUB_REF_NAME" --verify-tag --title "Protocol $VERSION" --generate-notes
+          if ! gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" --verify-tag --title "Protocol $VERSION" --generate-notes
           fi
-          gh release upload "$GITHUB_REF_NAME" artifacts/$VERSION/nuget/*.nupkg artifacts/$VERSION/*.tgz --clobber
+          gh release upload "$RELEASE_TAG" artifacts/$VERSION/nuget/*.nupkg artifacts/$VERSION/*.tgz --clobber
+          gh release edit "$RELEASE_TAG" --draft=false

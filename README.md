@@ -20,46 +20,23 @@ dotnet run --project Tests/ProtocolChecks.csproj
 
 원격 저장소가 연결되어 있습니다. 아래 CI/CD 설정을 참고하세요.
 
-## CI/CD
+## 자동 배포
 
-GitHub 원격: https://github.com/SeokJinYoo98/YuJanggi.Protocol
+개발과 PR 검증은 dev에서 진행하고 **main push 또는 PR 병합 시 자동 배포**합니다. 수동 태그 push는 배포를 시작하지 않습니다.
 
-- PR 및 main/master push: 계약 검사와 두 대상 프레임워크 NuGet·UPM 생성 검증.
-- `v1.0.0` 형식의 태그 push: 검사 후 GitHub Packages에 NuGet 게시, 같은 저장소에 `upm/v1.0.0` 패키지 전용 태그 생성, GitHub Release에 .nupkg/.tgz 첨부.
-- 정식 3자리 버전만 허용합니다. `v1.1`과 사전 릴리스 태그는 거부합니다.
-- 배포 결과는 서버/Unity의 사용 버전을 자동으로 바꾸지 않습니다.
+버전 기준은 src/YuJanggiCommon/YuJanggiCommon.csproj의 Version (초기 1.0.0)입니다. 새 패키지가 필요하면 dev에서 MAJOR.MINOR.PATCH 버전을 올리고 main에 병합하세요. 이미 완료된 버전은 건너뜁니다.
 
-### GitHub 설정과 첫 실행
+자동 순서: 버전 확인 → 테스트·패키지 생성 → 소스 태그 v버전 및 draft Release 생성 → NuGet 게시 → UPM 전용 upm/v버전 태그 생성 → 첨부 파일 업로드 → Release 공개.
+실패하면 draft 상태로 남으며 원래 커밋의 Actions 실행을 재실행합니다. 미완료 버전을 다른 커밋으로 재사용하면 중단합니다. 기존 버전 태그는 이동하지 않습니다.
 
-1. 이 변경을 GitHub 기본 브랜치에 커밋·push하고 Actions를 허용합니다.
-2. CI가 통과한 커밋에 새 태그를 붙입니다.
-3. `git tag -a v1.0.0 -m "Protocol 1.0.0"`, `git push origin v1.0.0`를 실행합니다.
-4. Actions, Packages, Releases와 upm 태그를 확인합니다.
+GitHub Actions가 허용되어야 하며 GITHUB_TOKEN에 선언한 contents:write와 packages:write를 조직 정책이 허용해야 합니다. NuGet 소비 CI에는 패키지 읽기 권한을 부여하고 개발 PC의 PAT classic(read:packages)은 커밋하지 않습니다.
 
-워크플로의 GITHUB_TOKEN에 packages:write, contents:write를 선언했습니다. 조직 정책이나 태그 규칙이 쓰기를 차단하면 해당 정책 설정이 필요합니다. 별도의 게시 PAT는 필요하지 않습니다.
-소비 저장소의 CI에는 패키지 Actions 읽기 접근 권한을 부여합니다. 로컬 NuGet 인증에는 read:packages 권한의 PAT classic을 사용하고 비밀값은 커밋하지 않습니다.
+- NuGet 소스: https://nuget.pkg.github.com/SeokJinYoo98/index.json
+- NuGet 패키지: YuJanggi.Protocol
+- Unity Git URL: https://github.com/SeokJinYoo98/YuJanggi.Protocol.git#upm/v1.0.0 (실제 게시된 버전으로 변경)
+- Release의 .tgz는 Unity Package Manager에서 tarball로 설치할 수 있습니다.
 
-### 서버와 Unity 설치
+Unity UPM은 기존 JSON 런타임 DLL을 필요로 합니다. 구 YuJanggiCommon.dll과 UPM DLL을 중복 로드하지 마세요. packaging/README.md를 참고하세요.
+서버·Unity의 참조 버전과 잠금 파일은 별도 변경으로 함께 검증합니다. 패키지 게시가 운영 서버나 게임 업데이트를 의미하지 않습니다.
 
-NuGet 소스: `https://nuget.pkg.github.com/SeokJinYoo98/index.json`
-패키지 ID: `YuJanggi.Protocol` (어셈블리는 기존 YuJanggiCommon).
-서버의 직접 DLL 참조를 `<PackageReference Include="YuJanggi.Protocol" Version="[1.0.0]" />`로 교체합니다.
-
-Unity Git URL:
-`https://github.com/SeokJinYoo98/YuJanggi.Protocol.git#upm/v1.0.0`
-
-UPM은 netstandard2.1 DLL만 포함합니다. 기존 JSON 런타임 플러그인은 유지해야 하며, 구 YuJanggiCommon DLL과 meta는 중복되지 않도록 제거합니다. 자세한 의존성 조건은 packaging/README.md를 참고하세요. Core와 소비 프로젝트 참조는 이 변경에서 수정하지 않습니다.
-
-### 로컬 확인
-
-```powershell
-./scripts/Build-Packages.ps1 -Version 0.0.0
-```
-
-계약 검사 후 artifacts/0.0.0 아래 NuGet과 UPM, tarball을 생성하고 두 프레임워크 DLL의 NuGet 포함 여부를 검사합니다. 같은 출력 폴더가 있으면 덮어쓰지 않고 중단하므로 깨끗한 체크아웃이나 다른 시험 버전을 사용하세요.
-
-### 재실행 및 버전 복구
-
-태그는 이동하지 않습니다. NuGet 중복 버전은 건너뛰고, 기존 UPM 태그는 원본 소스 커밋이 일치할 때만 재사용합니다. Release 첨부 파일은 동일 소스 태그의 재실행 시 갱신됩니다. 실패한 배포는 같은 소스로 재실행하며 코드 수정은 새 버전으로 배포합니다. 소비 측 문제는 이전에 검증된 버전과 잠금 파일로 되돌립니다.
-
-이 설정 자체의 로컬 검증과 실제 GitHub 게시 성공은 별개입니다. 최초 원격 실행에서 패키지 권한과 Unity Player 동작을 확인해야 합니다.
+로컬 검증: `./scripts/Build-Packages.ps1 -Version 0.0.0`. 같은 출력 폴더가 있으면 깨끗한 체크아웃에서 검증합니다. 로컬 생성 검증은 실제 GitHub 게시나 Unity Player 검증을 대신하지 않습니다.

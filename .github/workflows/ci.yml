@@ -2,7 +2,7 @@ name: Protocol CI
 on:
   pull_request:
   push:
-    branches: [main, master]
+    branches: [dev, main, master]
 permissions:
   contents: read
 jobs:
