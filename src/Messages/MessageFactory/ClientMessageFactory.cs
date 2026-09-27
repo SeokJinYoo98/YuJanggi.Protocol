@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Text.Json;
-using YuJanggi.Protocol.V2.Messages;
 
-namespace YuJanggi.Protocol.V2.Messages.MessageFactory
+namespace YuJanggi.Protocol.Messages
 {
     public static class ClientMessageFactory
     {

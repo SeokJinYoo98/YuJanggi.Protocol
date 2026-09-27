@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace YuJanggi.Protocol.V2.Connection
+namespace YuJanggi.Protocol.Connection
 {
 
     [Flags]

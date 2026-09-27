@@ -2,7 +2,7 @@
 
 이 디렉터리는 UPM 패키지 템플릿입니다. 사용 전 저장소 루트에서
 `./scripts/Prepare-Upm.ps1`을 실행하여 Runtime/Generated를 생성해야 합니다.
-원본은 `YuJanggi.Protocol.V2/`에만 있으며 생성된 C# 파일은 직접 수정하지 않습니다.
+원본은 `src/`에만 있으며 생성된 C# 파일은 직접 수정하지 않습니다.
 
 ## 설치
 
@@ -12,7 +12,7 @@
    UPM은 .csproj의 PackageReference를 읽거나 NuGet 복원을 수행하지 않습니다.
 3. 저장소에서 생성 스크립트를 실행한 뒤 Package Manager의
    **Install package from disk**에서 이 폴더의 `package.json`을 선택합니다.
-4. 사용자 asmdef에서는 `YuJanggi.Protocol.V2`를 참조합니다.
+4. 사용자 asmdef에서는 `YuJanggi.Protocol`를 참조합니다.
    JSON DLL은 Plugin Inspector에서 Auto Reference가 활성화되어 있어야 합니다.
 
 현재 netstandard2.1 복원 그래프에는 System.Text.Encodings.Web 8.0.0,

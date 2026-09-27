@@ -1,6 +1,4 @@
-using Microsoft.VisualBasic;
-
-namespace YuJanggi.Protocol.V2.Matching
+namespace YuJanggi.Protocol.Matching
 {
     public enum MatchingResult
     {

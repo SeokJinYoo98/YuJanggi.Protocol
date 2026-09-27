@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using YuJanggi.Protocol.V2.Matching;
 
-namespace YuJanggi.Protocol.V2.InGame
+namespace YuJanggi.Protocol.InGame
 {
-    public sealed record GameSceneReadyRequest { };
+    using Matching;
+    public sealed record GameStartEvent
+    {
+        public DateTimeOffset StartedAt { get; init; }
+    }
 
-    public sealed record MovePieceRequest
+    public sealed record MovePieceEvent
     {
         public ProtocolPlayerTeam Team { get; init; }
 
@@ -17,5 +18,4 @@ namespace YuJanggi.Protocol.V2.InGame
         public byte ToX { get; init; }
         public byte ToZ { get; init; }
     }
-
 }

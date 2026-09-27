@@ -1,6 +1,6 @@
 {
-  "name": "YuJanggi.Protocol.V2",
-  "rootNamespace": "YuJanggi.Protocol.V2",
+  "name": "YuJanggi.Protocol",
+  "rootNamespace": "YuJanggi.Protocol",
   "references": [],
   "autoReferenced": true,
   "overrideReferences": false,

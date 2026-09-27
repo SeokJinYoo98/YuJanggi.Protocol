@@ -3,11 +3,11 @@
 	<PropertyGroup>
 		<TargetFrameworks>net10.0;netstandard2.1</TargetFrameworks>
 
-		<AssemblyName>YuJanggi.Protocol.V2</AssemblyName>
-		<RootNamespace>YuJanggi.Protocol.V2</RootNamespace>
+		<AssemblyName>YuJanggi.Protocol</AssemblyName>
+		<RootNamespace>YuJanggi.Protocol</RootNamespace>
 		
-		<PackageId>YuJanggi.Protocol.V2</PackageId>
-		<Version>0.9.0</Version>
+		<PackageId>YuJanggi.Protocol</PackageId>
+		<Version>1.0.0</Version>
 		
 		<LangVersion>9.0</LangVersion>
 		<ImplicitUsings>disable</ImplicitUsings>

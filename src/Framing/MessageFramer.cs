@@ -2,7 +2,7 @@
 using System.Buffers.Binary;
 using System.IO;
 
-namespace YuJanggi.Protocol.V2.Framing
+namespace YuJanggi.Protocol.Framing
 {
 
     public static class MessageFramer

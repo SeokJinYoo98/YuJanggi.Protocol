@@ -4,7 +4,7 @@ param()
 
 $ErrorActionPreference = 'Stop'
 $repoRoot = [IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-$sourceRoot = Join-Path $repoRoot 'YuJanggi.Protocol.V2'
+$sourceRoot = Join-Path $repoRoot 'src'
 $runtimeRoot = Join-Path $repoRoot 'upm/Runtime'
 $generatedRoot = [IO.Path]::GetFullPath((Join-Path $runtimeRoot 'Generated'))
 $expectedRoot = [IO.Path]::GetFullPath((Join-Path $repoRoot 'upm/Runtime/Generated'))
@@ -14,7 +14,7 @@ if ($generatedRoot -ne $expectedRoot -or
 }
 
 # Resolve the actual Compile items, so future csproj includes/excludes are respected.
-$project = Join-Path $sourceRoot 'YuJanggi.Protocol.V2.csproj'
+$project = Join-Path $sourceRoot 'YuJanggi.Protocol.csproj'
 $itemsJson = & dotnet msbuild $project -nologo -p:TargetFramework=netstandard2.1 -getItem:Compile
 if ($LASTEXITCODE -ne 0) { throw 'Could not read project Compile items.' }
 $sourceFiles = @((($itemsJson -join "`n") | ConvertFrom-Json).Items.Compile)
@@ -45,7 +45,7 @@ try {
     foreach ($asset in $assets) {
         $assetPath = $asset.FullName.Substring($packageRoot.Length + 1).Replace('\', '/')
         $hash = $hasher.ComputeHash([Text.Encoding]::UTF8.GetBytes(
-            'com.seokjinyoo.yujanggi.protocol.v2/' + $assetPath))
+            'com.seokjinyoo.yujanggi.protocol/' + $assetPath))
         $guid = ([BitConverter]::ToString($hash)).Replace('-', '').ToLowerInvariant()
         $meta = "fileFormatVersion: 2`nguid: $guid`n"
         if ($asset.PSIsContainer) { $meta += "folderAsset: yes`n" }

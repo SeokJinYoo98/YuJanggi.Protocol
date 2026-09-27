@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace YuJanggi.Protocol.V2.Serialization
+namespace YuJanggi.Protocol.Serialization
 {
 
     public static class MessageSerializer

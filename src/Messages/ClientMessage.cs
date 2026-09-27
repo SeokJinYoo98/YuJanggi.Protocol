@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
+﻿using System.IO;
 using System.Text.Json;
 
-namespace YuJanggi.Protocol.V2.Messages
+namespace YuJanggi.Protocol.Messages
 {
 
     public enum ClientMessageType

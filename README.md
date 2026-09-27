@@ -1,4 +1,4 @@
-# YuJanggi.Protocol.V2
+# YuJanggi.Protocol
 
 Unity 클라이언트와 .NET 서버가 공유하는 유장기 네트워크 프로토콜 라이브러리입니다.
 메시지 계약, JSON 직렬화, 길이 헤더를 사용하는 프레이밍을 제공하여 양쪽에서 같은 통신 형식을 사용하도록 합니다.
@@ -30,7 +30,7 @@ TCP 연결 관리, 핸드셰이크 판정, 매칭 대기열과 게임 규칙은 
 | 소스 빌드·테스트 | .NET SDK 10 |
 | 라이브러리 타깃 | `net10.0`, `netstandard2.1` |
 | 라이브러리 C# 버전 | 9.0 |
-| NuGet 패키지 | `YuJanggi.Protocol.V2` 0.2.0 |
+| NuGet 패키지 | `YuJanggi.Protocol` 0.2.0 |
 | Unity 패키지 | `com.seokjinyoo.yujanggi.protocol.v2` 0.2.0, Unity 6 대상 |
 | .NET Standard JSON 의존성 | System.Text.Json 8.0.5 |
 
@@ -43,15 +43,15 @@ Unity에서는 JSON 의존성을 별도로 제공해야 합니다. Unity Editor 
 이 저장소 루트에서 패키지를 생성합니다. 다음 절차는 nuget.org 공개 배포를 전제로 하지 않습니다.
 
 ```powershell
-dotnet pack YuJanggi.Protocol.V2/YuJanggi.Protocol.V2.csproj -c Release -o artifacts/nuget
+dotnet pack src/YuJanggi.Protocol.csproj -c Release -o artifacts/nuget
 ```
 
-결과는 `artifacts/nuget/YuJanggi.Protocol.V2.0.2.0.nupkg`입니다.
+결과는 `artifacts/nuget/YuJanggi.Protocol.0.2.0.nupkg`입니다.
 같은 저장소 루트에서 예제 콘솔 프로젝트를 만들 수 있습니다.
 
 ```powershell
 dotnet new console -n ProtocolDemo -o artifacts/ProtocolDemo -f net10.0
-dotnet add artifacts/ProtocolDemo/ProtocolDemo.csproj package YuJanggi.Protocol.V2 --version 0.2.0 --source ./artifacts/nuget
+dotnet add artifacts/ProtocolDemo/ProtocolDemo.csproj package YuJanggi.Protocol --version 0.2.0 --source ./artifacts/nuget
 ```
 
 아래 최소 예제를 `artifacts/ProtocolDemo/Program.cs`에 넣고 실행합니다.
@@ -74,9 +74,9 @@ dotnet run --project artifacts/ProtocolDemo/ProtocolDemo.csproj
 ```
 
 4. Unity Package Manager의 **Install package from disk**에서 `upm/package.json`을 선택합니다.
-5. 사용자 asmdef에서 `YuJanggi.Protocol.V2`를 참조합니다.
+5. 사용자 asmdef에서 `YuJanggi.Protocol`를 참조합니다.
 
-원본은 `YuJanggi.Protocol.V2/`에만 작성합니다. 스크립트가 프로젝트의 Compile 항목을
+원본은 `src/`에만 작성합니다. 스크립트가 프로젝트의 Compile 항목을
 `upm/Runtime/Generated/`에 복사하고 `.meta`를 생성하므로 원본 변경 후 다시 실행합니다.
 생성물은 Git에서 제외되어 있어 `?path=/upm` Git URL 직접 설치는 지원하지 않습니다.
 의존성 준비와 배포 방법은 [UPM 안내](upm/README.md)를 참고하세요.
@@ -162,16 +162,16 @@ DTO는 결과를 표현할 뿐 버전 비교나 접속 차단을 직접 수행�
 ```powershell
 dotnet build -c Release
 dotnet test -c Release
-dotnet pack YuJanggi.Protocol.V2/YuJanggi.Protocol.V2.csproj -c Release -o artifacts/nuget
+dotnet pack src/YuJanggi.Protocol.csproj -c Release -o artifacts/nuget
 ```
 
-라이브러리 산출물은 `YuJanggi.Protocol.V2/bin/Release/` 아래 타깃별 디렉터리에 생성됩니다.
+라이브러리 산출물은 `src/bin/Release/` 아래 타깃별 디렉터리에 생성됩니다.
 기존 테스트는 핸드셰이크 요청·응답 왕복 및 프레임 길이 검증을 다룹니다.
 .NET 테스트 통과는 Unity 런타임 검증을 대체하지 않습니다.
 
 ```text
-YuJanggi.Protocol.V2/       # 계약·직렬화·프레이밍의 단일 원본
-YuJanggi.Protocol.V2.Tests/ # .NET 테스트
+src/       # 계약·직렬화·프레이밍의 단일 원본
+YuJanggi.Protocol.Tests/ # .NET 테스트
 scripts/Prepare-Upm.ps1    # UPM 소스와 메타데이터 생성
 upm/                      # Unity 패키지 템플릿과 설치 안내
 ```
@@ -183,5 +183,5 @@ upm/                      # Unity 패키지 템플릿과 설치 안내
 - 프로토콜 DLL과 UPM 소스를 같은 Unity 프로젝트에 동시에 설치하지 않습니다.
 - `Error` 메시지 종류는 정의되어 있지만 전용 오류 payload 계약은 아직 없습니다.
 
-[Unity 설치 안내](upm/README.md) · [메시지 계약](YuJanggi.Protocol.V2/Messages)
+[Unity 설치 안내](upm/README.md) · [메시지 계약](src/Messages)
 · [서버 V2](https://github.com/SeokJinYoo98/YuJanggi.Server.V2)

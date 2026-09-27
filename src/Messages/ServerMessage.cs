@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿
 using System.IO;
-using System.Text;
 using System.Text.Json;
 
 /*
@@ -10,7 +8,7 @@ using System.Text.Json;
     지원하지 않는 요청
     서버 내부 프로토콜 오류 
 */
-namespace YuJanggi.Protocol.V2.Messages
+namespace YuJanggi.Protocol.Messages
 {
 
     public enum ServerMessageType
