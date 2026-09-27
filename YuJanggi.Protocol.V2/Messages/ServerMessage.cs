@@ -27,8 +27,10 @@ namespace YuJanggi.Protocol.V2.Messages
 
         // InGame
         GameStartEvent = 6,
+        MovePieceEvent = 7,
 
-        Error = 100
+        Error = 100,
+
     }
     public sealed record ServerMessage
     {

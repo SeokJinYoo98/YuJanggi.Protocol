@@ -14,7 +14,7 @@ namespace YuJanggi.Protocol.V2.Messages
         // Matching
         MatchingRequest = 1, MatchingCancelRequest = 2, FormationSubmit = 3,
         // InGame
-        GameSceneReadyRequest = 4, MoveRequest = 5
+        GameSceneReadyRequest = 4, MovePieceRequest = 5
     }
     /// <summary>
     /// [Type]
