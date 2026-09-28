@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace YuJanggi.Protocol
+namespace YuJanggi.Protocol.Version
 {
 
     public static class Version
