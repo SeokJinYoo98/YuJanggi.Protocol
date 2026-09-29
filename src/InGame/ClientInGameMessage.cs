@@ -1,4 +1,5 @@
-﻿namespace YuJanggi.Protocol.InGame
+﻿#nullable enable
+namespace YuJanggi.Protocol.InGame
 {
     using Matching;
     public sealed record GameSceneReadyRequest { };

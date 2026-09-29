@@ -1,3 +1,4 @@
+#nullable enable
 namespace YuJanggi.Protocol.Matching
 {
     public enum MatchingResult
