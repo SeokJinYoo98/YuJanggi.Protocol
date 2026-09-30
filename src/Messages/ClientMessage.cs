@@ -4,13 +4,15 @@ using System.Text.Json;
 
 namespace YuJanggi.Protocol.Messages
 {
-
+    // Request   = 어떤 처리를 요청
+    // Submit = 클라이언트가 선택/데이터 제출
+    // Snapshot = 현재 상태 전체 전달
     public enum ClientMessageType
     {
         // Connect
         HandshakeRequest = 0,
         // Matching
-        MatchingRequest = 1, MatchingCancelRequest = 2, FormationSubmit = 3,
+        MatchingStartRequest = 1, MatchingCancelRequest = 2, FormationSubmit = 3,
         // InGame
         GameSceneReadyRequest = 4, MovePieceRequest = 5
     }

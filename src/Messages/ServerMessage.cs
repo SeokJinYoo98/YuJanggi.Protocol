@@ -10,18 +10,20 @@ using System.Text.Json;
 */
 namespace YuJanggi.Protocol.Messages
 {
-
+    // Response  = Request/Submit 처리 결과
+    // Event = 서버에서 발생한 사실 전달
+    // Command = 서버가 클라이언트에게 행동 요구
+    // Snapshot = 현재 상태 전체 전달
     public enum ServerMessageType
     {
         // Connecting
-        ProtocolHandshake = 0,
+        HandshakeResponse = 0,
 
         // Matching
-        MatchingResponse = 1,
-        MatchingCancelResponse = 2,
-        MatchingFound = 3,
-        FormationSubmitResponse = 4,
-        GameReady = 5,
+        MatchingStartResponse = 1, MatchingCancelResponse = 2,
+        MatchingFoundEvent = 3,
+        FormationSubmitCommand = 4,
+        GameReadyEvent = 5,
 
         // InGame
         GameStartEvent = 6,
