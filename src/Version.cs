@@ -5,6 +5,6 @@ namespace YuJanggi.Protocol.Version
 
     public static class Version
     {
-        public const string Current = "1.1.2";
+        public const string Current = "1.1.4";
     }
 }

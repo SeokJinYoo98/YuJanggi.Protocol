@@ -7,6 +7,7 @@ namespace YuJanggi.Protocol.Messages
     // Request   = 어떤 처리를 요청
     // Submit = 클라이언트가 선택/데이터 제출
     // Snapshot = 현재 상태 전체 전달
+    // Ready = 다음 핸들러로 넘어갈 준비 완료
     public enum ClientMessageType
     {
         // Connect
@@ -14,7 +15,7 @@ namespace YuJanggi.Protocol.Messages
         // Matching
         MatchingStartRequest = 1, MatchingCancelRequest = 2, FormationSubmit = 3,
         // InGame
-        GameSceneReadyRequest = 4, MovePieceRequest = 5
+        GameSceneReady = 4, MovePieceRequest = 5
     }
     /// <summary>
     /// [Type]

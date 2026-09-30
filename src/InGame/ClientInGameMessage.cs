@@ -2,7 +2,7 @@
 namespace YuJanggi.Protocol.InGame
 {
     using Matching;
-    public sealed record GameSceneReadyRequest { };
+    public sealed record GameSceneReady { };
 
     public sealed record MovePieceRequest
     {
