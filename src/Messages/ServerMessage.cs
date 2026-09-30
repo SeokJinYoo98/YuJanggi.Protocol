@@ -27,7 +27,8 @@ namespace YuJanggi.Protocol.Messages
 
         // InGame
         GameStartEvent = 6,
-        MovePieceEvent = 7,
+        MovePieceResponse = 7,
+        MovePieceEvent = 8,
 
         Error = 100,
 

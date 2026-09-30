@@ -8,6 +8,12 @@ namespace YuJanggi.Protocol.InGame
     {
         public DateTimeOffset StartedAt { get; init; }
     }
+    public enum MovePieceResult
+    { Accepted, NotYourTurn, PieceNotFound, IllegalMove, OutOfRange }
+    public sealed record MovePieceResponse
+    {
+        public MovePieceResult Result { get; init; }
+    }
 
     public sealed record MovePieceEvent
     {
