@@ -17,20 +17,24 @@ namespace YuJanggi.Protocol.Messages
     public enum ServerMessageType
     {
         // Connecting
-        HandshakeResponse = 0,
+        HandshakeResponse       = 100,
 
         // Matching
-        MatchingStartResponse = 1, MatchingCancelResponse = 2,
-        MatchingFoundEvent = 3,
-        FormationSubmitCommand = 4,
-        GameReadyEvent = 5,
+        MatchingStartResponse   = 200, 
+        MatchingCancelResponse  = 201,
+        MatchingFoundEvent      = 202,
+        FormationSubmitCommand  = 203,
+        GameReadyEvent          = 204,
 
         // InGame
-        GameStartEvent = 6,
-        MovePieceEvent = 7,
+        GameStartEvent          = 300,
+        MovePieceResponse       = 301,
+        MovePieceEvent          = 302,
+        GameEndResponse         = 303,
+        GameEndedEvent          = 304,
 
-        Error = 100,
-
+        // Error
+        Error                   = 0,
     }
     public sealed record ServerMessage
     {
