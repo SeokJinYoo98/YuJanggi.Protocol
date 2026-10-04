@@ -14,8 +14,13 @@ namespace YuJanggi.Protocol.InGame
         public byte ToX { get; init; }
         public byte ToZ { get; init; }
     }
+    public enum ProtocolGameEndReason
+    {
+        Draw, CheckMate, GiveUp, Score
+    }
     public sealed record GameEndRequest
     {
+        public ProtocolGameEndReason EndReason { get; init; }
         public ProtocolPlayerTeam Winner { get; init; }
         public int TotalMoves { get; init; }
     }
