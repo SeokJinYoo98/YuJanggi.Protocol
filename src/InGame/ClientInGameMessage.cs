@@ -14,5 +14,9 @@ namespace YuJanggi.Protocol.InGame
         public byte ToX { get; init; }
         public byte ToZ { get; init; }
     }
-
+    public sealed record GameEndRequest
+    {
+        public ProtocolPlayerTeam Winner { get; init; }
+        public int TotalMoves { get; init; }
+    }
 }

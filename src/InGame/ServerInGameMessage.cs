@@ -25,4 +25,20 @@ namespace YuJanggi.Protocol.InGame
         public byte ToX { get; init; }
         public byte ToZ { get; init; }
     }
+
+    public enum GameEndResult
+    {
+        Accepted,
+        Mismatch,
+        Failed
+    }
+    public sealed record GameEndResponse
+    {
+        public GameEndResult Result { get; init; }
+    }
+    public sealed record GameEndedEvent
+    {
+        public ProtocolPlayerTeam Winner { get; init; }
+        public int TotalMoves { get; init; }
+    }
 }

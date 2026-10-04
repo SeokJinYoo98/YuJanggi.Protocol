@@ -11,11 +11,17 @@ namespace YuJanggi.Protocol.Messages
     public enum ClientMessageType
     {
         // Connect
-        HandshakeRequest = 0,
+        HandshakeRequest        = 100,
+
         // Matching
-        MatchingStartRequest = 1, MatchingCancelRequest = 2, FormationSubmit = 3,
+        MatchingStartRequest    = 200, 
+        MatchingCancelRequest   = 201, 
+        FormationSubmit         = 202,
+
         // InGame
-        GameSceneReady = 4, MovePieceRequest = 5
+        GameSceneReady          = 300, 
+        MovePieceRequest        = 301,
+        GameEndRequest          = 302,
     }
     /// <summary>
     /// [Type]
