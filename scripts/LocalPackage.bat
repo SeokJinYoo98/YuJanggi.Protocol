@@ -1,93 +1,32 @@
 @echo off
 setlocal EnableExtensions
-
-rem =========================
-rem Input
-rem =========================
 set "TARGET="
 set "VERSION="
-
-set /p TARGET=Target: 
-set /p VERSION=Version: 
-
-if "%TARGET%"=="" (
+set /p "TARGET=Target: "
+set /p "VERSION=Version: "
+if not defined TARGET (
     echo [ERROR] Target is required.
-    exit /b 1
+    goto FAILED
 )
-
-if "%VERSION%"=="" (
+if not defined VERSION (
     echo [ERROR] Version is required.
-    exit /b 1
+    goto FAILED
 )
-
-rem =========================
-rem Paths
-rem =========================
-set "SCRIPT_DIR=%~dp0"
-
-set "SET_VERSION=%SCRIPT_DIR%SetVersion.bat"
-set "BUILD_PACKAGE=%SCRIPT_DIR%BuildPackage.bat"
-
-rem =========================
-rem Validate Scripts
-rem =========================
-if not exist "%SET_VERSION%" (
-    echo [ERROR] SetVersion.bat not found:
-    echo %SET_VERSION%
-    exit /b 1
-)
-
-if not exist "%BUILD_PACKAGE%" (
-    echo [ERROR] BuildPackage.bat not found:
-    echo %BUILD_PACKAGE%
-    exit /b 1
-)
-
-rem =========================
-rem Set Version
-rem =========================
-echo.
-echo =========================
-echo Set Version
-echo =========================
-echo Target : %TARGET%
-echo Version: %VERSION%
-
-call "%SET_VERSION%" "%TARGET%" "%VERSION%"
-
+powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File "%~dp0SetVersion.ps1" -Target "%TARGET%" -Version "%VERSION%"
 if errorlevel 1 (
-    echo.
     echo [ERROR] SetVersion failed.
-    pause
-    exit /b 1
+    goto FAILED
 )
-
-rem =========================
-rem Build Package
-rem =========================
-echo.
-echo =========================
-echo Build Package
-echo =========================
-
-call "%BUILD_PACKAGE%" "%TARGET%"
-
+call "%~dp0BuildPackage.bat" "%TARGET%"
 if errorlevel 1 (
-    echo.
     echo [ERROR] BuildPackage failed.
-    pause
-    exit /b 1
+    goto FAILED
 )
-
-rem =========================
-rem Completed
-rem =========================
-echo.
-echo =========================
-echo Package completed
-echo =========================
-echo Target : %TARGET%
+echo Package completed.
+echo Target: %TARGET%
 echo Version: %VERSION%
-
 pause
 exit /b 0
+:FAILED
+pause
+exit /b 1

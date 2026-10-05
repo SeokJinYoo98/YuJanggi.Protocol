@@ -39,8 +39,8 @@ jobs:
 
       # Version.cs / csproj / package.json
       - name: Set Version
-        shell: cmd
-        run: scripts\SetVersion.bat %TARGET% %VERSION%
+        shell: pwsh
+        run: ./scripts/SetVersion.ps1 -Target $env:TARGET -Version $env:VERSION
 
       # Dependencies
       - name: Restore
