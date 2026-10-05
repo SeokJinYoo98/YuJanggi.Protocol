@@ -70,15 +70,7 @@ rem =========================
 echo.
 echo Updating Version.cs...
 
-powershell -NoProfile -Command ^
-"$path = $env:VERSION_FILE; ^
-$version = $env:VERSION; ^
-$text = [System.IO.File]::ReadAllText($path); ^
-$pattern = 'public\s+const\s+string\s+Current\s*=\s*""[^""]+""\s*;'; ^
-if ($text -notmatch $pattern) { throw 'Version.Current not found.' }; ^
-$replacement = 'public const string Current = ""' + $version + '"";'; ^
-$updated = [regex]::Replace($text, $pattern, $replacement, 1); ^
-[System.IO.File]::WriteAllText($path, $updated)"
+powershell -NoProfile -Command "$path=$env:VERSION_FILE; $version=$env:VERSION; $text=[System.IO.File]::ReadAllText($path); $pattern='public\s+const\s+string\s+Current\s*=\s*""[^""]+""\s*;'; if($text -notmatch $pattern){ throw 'Version.Current not found.' }; $replacement='public const string Current = ""' + $version + '"";'; $updated=[regex]::Replace($text,$pattern,$replacement,1); [System.IO.File]::WriteAllText($path,$updated)"
 
 if errorlevel 1 (
     echo [ERROR] Failed to update Version.cs.
