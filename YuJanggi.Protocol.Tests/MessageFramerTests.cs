@@ -1,14 +1,13 @@
-﻿using System;
+using System;
 using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using YuJanggi.Protocol.V2.Connection;
-using YuJanggi.Protocol.V2.Framing;
-using YuJanggi.Protocol.V2.Messages;
-using YuJanggi.Protocol.V2.Messages.MessageFactory;
-using YuJanggi.Protocol.V2.Serialization;
+using YuJanggi.Protocol.Connection;
+using YuJanggi.Protocol.Framing;
+using YuJanggi.Protocol.Messages;
+using YuJanggi.Protocol.Serialization;
 
-namespace YuJanggi.Protocol.V2.Tests
+namespace YuJanggi.Protocol.Tests
 {
     [TestClass]
     public class MessageFramerTests
