@@ -59,6 +59,14 @@ jobs:
         shell: cmd
         run: scripts\BuildPackage.bat %TARGET%
 
+      # CD에서 동일한 NuGet 패키지 사용
+      - name: Upload NuGet Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: yujanggi-protocol-nuget
+          path: artifacts/nuget/*.nupkg
+          if-no-files-found: error
+
       # GitHub Release
       - name: Create GitHub Release
         shell: pwsh
