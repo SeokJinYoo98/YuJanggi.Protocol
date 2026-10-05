@@ -1,8 +1,13 @@
-name: Protocl CI
+name: Protocol CI
 
 on:
+    push:
+        branches:
+            - dev
+
     pull_request:
         branches:
+            - master
             - dev
 
 permissions:
