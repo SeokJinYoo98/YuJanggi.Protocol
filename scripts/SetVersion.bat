@@ -86,19 +86,24 @@ if errorlevel 1 (
 )
 
 rem =========================
+rem Update Version.cs
+rem =========================
+echo.
+echo Updating Version.cs...
+
+powershell -NoProfile -Command "$path=$env:VERSION_FILE; $version=$env:VERSION; $q=[char]34; $found=$false; $lines=Get-Content -LiteralPath $path; $lines=$lines | ForEach-Object { if($_ -match '^\s*public\s+const\s+string\s+Current\s*='){ $found=$true; '        public const string Current = ' + $q + $version + $q + ';' } else { $_ } }; if(-not $found){ throw 'Version.Current not found.' }; Set-Content -LiteralPath $path -Value $lines -Encoding UTF8"
+
+if errorlevel 1 (
+    echo [ERROR] Failed to update Version.cs.
+    exit /b 1
+)
+
+rem =========================
 rem Update csproj
 rem =========================
 echo Updating YuJanggi.%TARGET%.csproj...
 
-powershell -NoProfile -Command ^
-"$path = $env:CSPROJ; ^
-$version = $env:VERSION; ^
-$text = [System.IO.File]::ReadAllText($path); ^
-$pattern = '<Version>[^<]+</Version>'; ^
-if ($text -notmatch $pattern) { throw 'Version element not found.' }; ^
-$replacement = '<Version>' + $version + '</Version>'; ^
-$updated = [regex]::Replace($text, $pattern, $replacement, 1); ^
-[System.IO.File]::WriteAllText($path, $updated)"
+powershell -NoProfile -Command "$path=$env:CSPROJ; $version=$env:VERSION; $text=[System.IO.File]::ReadAllText($path); if($text -notmatch '<Version>[^<]+</Version>'){ throw 'Version element not found.' }; $updated=[regex]::Replace($text, '<Version>[^<]+</Version>', '<Version>' + $version + '</Version>', 1); [System.IO.File]::WriteAllText($path,$updated)"
 
 if errorlevel 1 (
     echo [ERROR] Failed to update csproj.
@@ -110,15 +115,7 @@ rem Update package.json
 rem =========================
 echo Updating package.json...
 
-powershell -NoProfile -Command ^
-"$path = $env:UPM_PACKAGE; ^
-$version = $env:VERSION; ^
-$text = [System.IO.File]::ReadAllText($path); ^
-$pattern = '(""version""\s*:\s*"")[^""]+("")'; ^
-if ($text -notmatch $pattern) { throw 'package.json version not found.' }; ^
-$replacement = '${1}' + $version + '${2}'; ^
-$updated = [regex]::Replace($text, $pattern, $replacement, 1); ^
-[System.IO.File]::WriteAllText($path, $updated)"
+powershell -NoProfile -Command "$path=$env:UPM_PACKAGE; $version=$env:VERSION; $json=Get-Content -LiteralPath $path -Raw | ConvertFrom-Json; $json.version=$version; $json | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $path -Encoding UTF8"
 
 if errorlevel 1 (
     echo [ERROR] Failed to update package.json.
