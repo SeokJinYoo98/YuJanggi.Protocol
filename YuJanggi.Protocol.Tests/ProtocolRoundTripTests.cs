@@ -1,17 +1,28 @@
-﻿using System;
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using YuJanggi.Protocol.V2.Connection;
-using YuJanggi.Protocol.V2.Framing;
-using YuJanggi.Protocol.V2.Messages;
-using YuJanggi.Protocol.V2.Messages.MessageFactory;
-using YuJanggi.Protocol.V2.Serialization;
+using YuJanggi.Protocol.Connection;
+using YuJanggi.Protocol.Framing;
+using YuJanggi.Protocol.Messages;
+using YuJanggi.Protocol.Serialization;
 
-namespace YuJanggi.Protocol.V2.Tests
+namespace YuJanggi.Protocol.Tests
 {
     [TestClass]
     public class ProtocolRoundTripTests
     {
+        [TestMethod]
+        public void GameSceneReady_Create_HasNoRequestIdAndPreservesPayload()
+        {
+            var message = ClientMessageFactory.Create(
+                ClientMessageType.GameSceneReady, new YuJanggi.Protocol.InGame.GameSceneReady());
+            var received = MessageSerializer.Deserialize<ClientMessage>(MessageSerializer.Serialize(message));
+
+            Assert.AreEqual(ClientMessageType.GameSceneReady, received.Type);
+            Assert.IsNull(received.RequestId);
+            Assert.IsNotNull(received.GetPayload<YuJanggi.Protocol.InGame.GameSceneReady>());
+        }
+
         [TestMethod]
         public void ProtocolHandshakeRequest_RoundTrip_Success()
         {
@@ -22,7 +33,7 @@ namespace YuJanggi.Protocol.V2.Tests
             };
 
             ClientMessage message =
-                ClientMessageFactory.Create(
+                ClientMessageFactory.CreateRequest(
                     ClientMessageType.HandshakeRequest,
                     request);
 
@@ -76,7 +87,7 @@ namespace YuJanggi.Protocol.V2.Tests
 
             ServerMessage message =
                 ServerMessageFactory.CreateResponse(
-                    ServerMessageType.ProtocolHandshake,
+                    ServerMessageType.HandshakeResponse,
                     requestId,
                     response);
 
@@ -103,7 +114,7 @@ namespace YuJanggi.Protocol.V2.Tests
                 receivedMessage.GetPayload<ProtocolHandshakeResponse>();
 
             Assert.AreEqual(
-                ServerMessageType.ProtocolHandshake,
+                ServerMessageType.HandshakeResponse,
                 receivedMessage.Type);
 
             Assert.AreEqual(

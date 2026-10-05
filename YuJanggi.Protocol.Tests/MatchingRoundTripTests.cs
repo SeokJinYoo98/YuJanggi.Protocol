@@ -1,34 +1,33 @@
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using YuJanggi.Protocol.V2.Framing;
-using YuJanggi.Protocol.V2.Matching;
-using YuJanggi.Protocol.V2.Messages;
-using YuJanggi.Protocol.V2.Messages.MessageFactory;
-using YuJanggi.Protocol.V2.Serialization;
+using YuJanggi.Protocol.Framing;
+using YuJanggi.Protocol.Matching;
+using YuJanggi.Protocol.Messages;
+using YuJanggi.Protocol.Serialization;
 
-namespace YuJanggi.Protocol.V2.Tests
+namespace YuJanggi.Protocol.Tests
 {
     [TestClass]
     public class MatchingRoundTripTests
     {
         [TestMethod]
-        public void MatchingRequest_RoundTrip_PreservesRequestIdAndPayload()
+        public void MatchingStartRequest_RoundTrip_PreservesRequestIdAndPayload()
         {
-            var message = ClientMessageFactory.Create(
-                ClientMessageType.MatchingRequest, new MatchingRequest());
+            var message = ClientMessageFactory.CreateRequest(
+                ClientMessageType.MatchingStartRequest, new MatchingStartRequest());
 
             var received = RoundTrip(message);
 
-            Assert.AreEqual(ClientMessageType.MatchingRequest, received.Type);
+            Assert.AreEqual(ClientMessageType.MatchingStartRequest, received.Type);
             Assert.IsFalse(string.IsNullOrWhiteSpace(received.RequestId));
             Assert.AreEqual(message.RequestId, received.RequestId);
-            Assert.IsNotNull(received.GetPayload<MatchingRequest>());
+            Assert.IsNotNull(received.GetPayload<MatchingStartRequest>());
         }
 
         [TestMethod]
         public void MatchingCancelRequest_RoundTrip_PreservesRequestIdAndPayload()
         {
-            var message = ClientMessageFactory.Create(
+            var message = ClientMessageFactory.CreateRequest(
                 ClientMessageType.MatchingCancelRequest, new MatchingCancelRequest());
 
             var received = RoundTrip(message);
@@ -45,19 +44,19 @@ namespace YuJanggi.Protocol.V2.Tests
         [DataRow(MatchingResult.AlreadyMatched, "매칭이 완료되었습니다.")]
         [DataRow(MatchingResult.HandshakeRequired, "핸드셰이크가 필요합니다.")]
         [DataRow(MatchingResult.ServerError, "서버 오류")]
-        public void MatchingResponse_RoundTrip_PreservesResultAndRequestId(
+        public void MatchingStartResponse_RoundTrip_PreservesResultAndRequestId(
             MatchingResult result, string? detail)
         {
-            var request = ClientMessageFactory.Create(
-                ClientMessageType.MatchingRequest, new MatchingRequest());
-            var response = new MatchingResponse { Result = result, Message = detail };
+            var request = ClientMessageFactory.CreateRequest(
+                ClientMessageType.MatchingStartRequest, new MatchingStartRequest());
+            var response = new MatchingStartResponse { Result = result, Message = detail };
             var message = ServerMessageFactory.CreateResponse(
-                ServerMessageType.MatchingResponse, request.RequestId!, response);
+                ServerMessageType.MatchingStartResponse, request.RequestId!, response);
 
             var received = RoundTrip(message);
-            var payload = received.GetPayload<MatchingResponse>();
+            var payload = received.GetPayload<MatchingStartResponse>();
 
-            Assert.AreEqual(ServerMessageType.MatchingResponse, received.Type);
+            Assert.AreEqual(ServerMessageType.MatchingStartResponse, received.Type);
             Assert.AreEqual(request.RequestId, received.RequestId);
             Assert.AreEqual(result, payload.Result);
             Assert.AreEqual(detail, payload.Message);
@@ -72,7 +71,7 @@ namespace YuJanggi.Protocol.V2.Tests
         public void MatchingCancelResponse_RoundTrip_PreservesResultAndRequestId(
             MatchingCancelResult result, string? detail)
         {
-            var request = ClientMessageFactory.Create(
+            var request = ClientMessageFactory.CreateRequest(
                 ClientMessageType.MatchingCancelRequest, new MatchingCancelRequest());
             var response = new MatchingCancelResponse { Result = result, Message = detail };
             var message = ServerMessageFactory.CreateResponse(
@@ -90,22 +89,22 @@ namespace YuJanggi.Protocol.V2.Tests
         [TestMethod]
         public void MatchingFound_RoundTrip_PreservesPlayersAndHasNoRequestId()
         {
-            var match = new MatchingFound
+            var match = new MatchingFoundEvent
             {
                 MatchId = "match-001",
                 MyTeam = ProtocolPlayerTeam.Cho,
-                Opponent = new MatchingPlayerEvent
+                Opponent = new MatchingPlayer
                 {
                     PlayerId = "player-han", PlayerNickname = "한 플레이어",
                     PlayerTeam = ProtocolPlayerTeam.Han
                 }
             };
-            var message = ServerMessageFactory.CreateEvent(ServerMessageType.MatchingFound, match);
+            var message = ServerMessageFactory.CreateEvent(ServerMessageType.MatchingFoundEvent, match);
 
             var received = RoundTrip(message);
-            var payload = received.GetPayload<MatchingFound>();
+            var payload = received.GetPayload<MatchingFoundEvent>();
 
-            Assert.AreEqual(ServerMessageType.MatchingFound, received.Type);
+            Assert.AreEqual(ServerMessageType.MatchingFoundEvent, received.Type);
             Assert.IsNull(received.RequestId);
             Assert.AreEqual(match.MatchId, payload.MatchId);
             Assert.AreEqual(match.MyTeam, payload.MyTeam);
@@ -126,11 +125,12 @@ namespace YuJanggi.Protocol.V2.Tests
             {
                 MatchId = "match-ready-001", ChoFormation = cho, HanFormation = han
             };
-            var message = ServerMessageFactory.CreateEvent(ServerMessageType.GameReady, ready);
+            var message = ServerMessageFactory.CreateEvent(ServerMessageType.GameReadyEvent, ready);
             var received = RoundTrip(message);
             var payload = received.GetPayload<GameReadyEvent>();
 
-            Assert.AreEqual(5, (int)received.Type);
+            Assert.AreEqual(ServerMessageType.GameReadyEvent, received.Type);
+            Assert.AreEqual(204, (int)received.Type);
             Assert.IsNull(received.RequestId);
             Assert.AreEqual(ready.MatchId, payload.MatchId);
             Assert.AreEqual(cho, payload.ChoFormation);
