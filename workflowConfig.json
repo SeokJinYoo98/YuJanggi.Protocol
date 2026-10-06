@@ -1,0 +1,8 @@
+{
+  "target": "Protocol",
+  "solutionPath": "YuJanggi.Protocol.slnx",
+  "dotnetVersion": "10.0.x",
+  "nodeVersion": "22",
+  "nugetArtifactName": "yujanggi-protocol-nuget",
+  "upmArtifactName": "yujanggi-protocol-upm"
+}
