@@ -1,7 +1,20 @@
+<h3 align="center">Tech Stack</h3>
+
+<p align="center">
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg" height="40" alt="C#" title="C#" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dotnetcore/dotnetcore-original.svg" height="40" alt=".NET" title=".NET" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nuget/nuget-original.svg" height="40" alt="NuGet" title="NuGet" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/unity/unity-original.svg" height="40" alt="Unity UPM" title="Unity UPM" />
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/githubactions/githubactions-original.svg" height="40" alt="GitHub Actions" title="GitHub Actions" />
+</p>
+
+<p align="center">
+  .NET 10 / .NET Standard 2.1 · System.Text.Json · MSTest
+</p>
+
 # YuJanggi.Protocol
 
-`YuJanggi.Unity`와 `YuJanggi.Server`가 공유하는 네트워크 메시지 계약 라이브러리입니다. 
-
+`YuJanggi.Unity`와 `YuJanggi.Server`가 공유하는 네트워크 메시지 계약 라이브러리입니다. <br>
 메시지 형식과 직렬화·패킷 경계 처리를 한 소스에서 관리하고, .NET용 NuGet과 Unity용 UPM 패키지로 제공합니다.
 
 ## Overview
@@ -15,11 +28,9 @@
 
 Unity Client와 Server가 각각 Protocol을 참조합니다. 
 
-실제 TCP 연결·송수신, 요청 대기, 매칭 판단과 게임 상태 변경은 소비 프로젝트가 담당합니다.
-
-메시지 → UTF-8 JSON → 4바이트 Big-Endian 길이 헤더 + 본문 → Client / Server Transport
-
-Request는 ID를 생성하고 Response는 같은 ID를 유지합니다. Event와 단방향 알림에는 RequestId가 없습니다. 
+실제 TCP 연결·송수신, 요청 대기, 매칭 판단과 게임 상태 변경은 소비 프로젝트가 담당합니다.<br>
+메시지 → UTF-8 JSON → 4바이트 Big-Endian 길이 헤더 + 본문 → Client / Server Transport<br>
+Request는 ID를 생성하고 Response는 같은 ID를 유지합니다. Event와 단방향 알림에는 RequestId가 없습니다.
 
 Framing은 본문 크기를 1~4,096바이트로 제한합니다.
 
@@ -39,12 +50,10 @@ MSTest는 메시지 직렬화·Framing 왕복, RequestId와 Payload 보존, 잘�
 - **[Release](.github/workflows/package-release.yml)**: `v*.*.*` Tag Push → Version 설정 → Restore → Build / Test → NuGet / UPM 패키징 → Artifact 업로드와 GitHub Release 생성
 - **[CD](.github/workflows/cd.yml)**: 동일 Repository의 성공한 Release Push 실행 → 해당 Run ID의 NuGet Artifact 다운로드 → GitHub Packages Publish
 
-CD는 Release에서 검증한 `.nupkg`를 그대로 사용하며 다시 빌드하지 않습니다. 
-
+CD는 Release에서 검증한 `.nupkg`를 그대로 사용하며 다시 빌드하지 않습니다. <br>
 인증은 `GITHUB_TOKEN`을 사용하고, 이미 존재하는 버전은 `--skip-duplicate`로 건너뜁니다.
 
-[workflowConfig.json](workflowConfig.json)에서 프로젝트 경로, SDK와 Node.js 버전, Artifact 이름을 관리합니다.
-
+[workflowConfig.json](workflowConfig.json)에서 프로젝트 경로, SDK와 Node.js 버전, Artifact 이름을 관리합니다.<br>
 [SetVersion.ps1](scripts/SetVersion.ps1)은 Tag 버전을 `Version.cs`, `.csproj`, `upm/package.json`에 동일하게 적용합니다.
 
 ### 패키지 사용
