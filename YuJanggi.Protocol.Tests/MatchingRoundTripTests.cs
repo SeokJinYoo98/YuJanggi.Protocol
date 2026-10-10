@@ -130,7 +130,7 @@ namespace YuJanggi.Protocol.Tests
             var payload = received.GetPayload<GameReadyEvent>();
 
             Assert.AreEqual(ServerMessageType.GameReadyEvent, received.Type);
-            Assert.AreEqual(204, (int)received.Type);
+            Assert.AreEqual(203, (int)received.Type);
             Assert.IsNull(received.RequestId);
             Assert.AreEqual(ready.MatchId, payload.MatchId);
             Assert.AreEqual(cho, payload.ChoFormation);
