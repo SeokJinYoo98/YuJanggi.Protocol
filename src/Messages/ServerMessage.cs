@@ -23,8 +23,7 @@ namespace YuJanggi.Protocol.Messages
         MatchingStartResponse   = 200, 
         MatchingCancelResponse  = 201,
         MatchingFoundEvent      = 202,
-        FormationSubmitCommand  = 203,
-        GameReadyEvent          = 204,
+        GameReadyEvent          = 203,
 
         // InGame
         GameStartEvent          = 300,
