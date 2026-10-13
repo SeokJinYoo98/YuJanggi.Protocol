@@ -15,15 +15,22 @@ namespace YuJanggi.Protocol.InGame
         public MovePieceResult Result { get; init; }
     }
 
-    public sealed record MovePieceEvent
+    public enum ProtocolTurnAction
     {
-        public ProtocolPlayerTeam Team { get; init; }
+        Move,
+        Pass
+    }
 
-        public byte FromX { get; init; }
-        public byte FromZ { get; init; }
+    public sealed record TurnCompletedEvent
+    {
+        public ProtocolPlayerTeam Team   { get; init; }
+        public ProtocolTurnAction Action { get; init; }
 
-        public byte ToX { get; init; }
-        public byte ToZ { get; init; }
+        // Action이 Move일 때만 사용합니다.
+        public byte FromX   { get; init; }
+        public byte FromZ   { get; init; }
+        public byte ToX     { get; init; }
+        public byte ToZ     { get; init; }
     }
 
     public enum GameEndResult
@@ -40,5 +47,14 @@ namespace YuJanggi.Protocol.InGame
     {
         public ProtocolPlayerTeam Winner { get; init; }
         public int TotalMoves { get; init; }
+    }
+    public enum PassTurnResponseType
+    {
+        Accepted,
+        Rejected
+    }
+    public sealed record PassTurnResponse
+    {
+        public PassTurnResponseType Result { get; init; }
     }
 }
