@@ -46,6 +46,7 @@ namespace YuJanggi.Protocol.InGame
     public sealed record GameEndedEvent
     {
         public ProtocolPlayerTeam Winner { get; init; }
+        public ProtocolGameEndReason EndReason { get; init; }
         public int TotalMoves { get; init; }
     }
     public enum PassTurnResponseType
