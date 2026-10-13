@@ -31,9 +31,11 @@ namespace YuJanggi.Protocol.Messages
         TurnCompletedEvent      = 302,
         GameEndResponse         = 303,
         GameEndedEvent          = 304,
-        PassTurnResponse        = 305,
-        ChatResponse            = 306,
-        ChatEvent               = 307,
+        GiveUpResponse          = 305,
+
+        PassTurnResponse        = 307,
+        ChatResponse            = 308,
+        ChatEvent               = 309,
 
         // Error
         Error                   = 0,
