@@ -24,6 +24,10 @@ namespace YuJanggi.Protocol.InGame
         public ProtocolPlayerTeam       Winner      { get; init; }
         public int                      TotalMoves  { get; init; }
     }
+    public sealed record GiveUpRequest
+    {
+        public ProtocolPlayerTeam Requester { get; init; }
+    }
     public sealed record PassTurnRequest
     {
         public ProtocolPlayerTeam Requester { get; init; }

@@ -21,9 +21,13 @@ namespace YuJanggi.Protocol.Messages
         // InGame
         GameSceneReady          = 300, 
         MovePieceRequest        = 301,
-        GameEndRequest          = 302,
-        PassTurnRequest         = 303,
-        ChatRequest             = 304,
+
+        GameEndRequest          = 302, // ?
+
+        GiveUpRequest           = 303,
+
+        PassTurnRequest         = 304,
+        ChatRequest             = 305,
 
     }
     /// <summary>
