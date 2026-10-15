@@ -23,12 +23,12 @@ namespace YuJanggi.Protocol.Messages
         MovePieceRequest        = 301,
 
         GameEndRequest          = 302, // ?
-
         GiveUpRequest           = 303,
-
         PassTurnRequest         = 304,
         ChatRequest             = 305,
 
+        RematchRequest          = 306,
+        RematchReply            = 307
     }
     /// <summary>
     /// [Type]
