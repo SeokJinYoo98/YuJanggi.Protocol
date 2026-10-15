@@ -24,11 +24,8 @@ namespace YuJanggi.Protocol.InGame
         public ProtocolPlayerTeam       Winner      { get; init; }
         public int                      TotalMoves  { get; init; }
     }
-    public sealed record GiveUpRequest
-    {
-        public ProtocolPlayerTeam Requester { get; init; }
-    }
-    public sealed record PassTurnRequest
+    // GiveUpRequest, PassTurnRequest, RematchRequest가 공통으로 사용합니다.
+    public sealed record GamePlayerRequest
     {
         public ProtocolPlayerTeam Requester { get; init; }
     }

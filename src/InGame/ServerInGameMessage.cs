@@ -50,4 +50,7 @@ namespace YuJanggi.Protocol.InGame
         public int TotalMoves { get; init; }
     }
 
+    // 양쪽이 재대결을 신청하면 전송합니다. 대국 시작은 기존 GameSceneReady/GameStartEvent를 사용합니다.
+    public sealed record RematchConfirmedEvent { }
+
 }
