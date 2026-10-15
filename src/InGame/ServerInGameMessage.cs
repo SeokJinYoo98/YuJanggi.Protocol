@@ -39,28 +39,15 @@ namespace YuJanggi.Protocol.InGame
         Mismatch,
         Failed
     }
-    public sealed record GameEndResponse
+    public sealed record GameRequestResponse
     {
         public GameRequestResult Result { get; init; }
     }
-    public sealed record GiveUpResponse
-    {
-        public GameRequestResult Result { get; init; }
-    }
-
     public sealed record GameEndedEvent
     {
         public ProtocolPlayerTeam Winner { get; init; }
         public ProtocolGameEndReason EndReason { get; init; }
         public int TotalMoves { get; init; }
     }
-    public enum PassTurnResponseType
-    {
-        Accepted,
-        Rejected
-    }
-    public sealed record PassTurnResponse
-    {
-        public PassTurnResponseType Result { get; init; }
-    }
+
 }
