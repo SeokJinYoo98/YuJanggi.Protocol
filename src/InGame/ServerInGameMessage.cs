@@ -33,7 +33,7 @@ namespace YuJanggi.Protocol.InGame
         public byte ToZ     { get; init; }
     }
 
-    public enum GameEndResult
+    public enum GameRequestResult
     {
         Accepted,
         Mismatch,
@@ -41,8 +41,13 @@ namespace YuJanggi.Protocol.InGame
     }
     public sealed record GameEndResponse
     {
-        public GameEndResult Result { get; init; }
+        public GameRequestResult Result { get; init; }
     }
+    public sealed record GiveUpResponse
+    {
+        public GameRequestResult Result { get; init; }
+    }
+
     public sealed record GameEndedEvent
     {
         public ProtocolPlayerTeam Winner { get; init; }
