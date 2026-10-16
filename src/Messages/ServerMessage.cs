@@ -34,11 +34,12 @@ namespace YuJanggi.Protocol.Messages
         GiveUpResponse          = 305,
 
         PassTurnResponse        = 307,
-        ChatResponse            = 308,
-        ChatEvent               = 309,
+        RematchResponse         = 308, // GameRequestResponse: 요청 접수 결과 → 보낸 사람
+        RematchConfirmedEvent   = 309, // 양쪽 동의 완료 → 양쪽
 
-        RematchResponse         = 310, // GameRequestResponse: 요청 접수 결과 → 보낸 사람
-        RematchConfirmedEvent   = 312, // 양쪽 동의 완료 → 양쪽
+        // Chat
+        ChatResponse            = 400,
+        ChatEvent               = 401,
 
         // Error
         Error                   = 0,
