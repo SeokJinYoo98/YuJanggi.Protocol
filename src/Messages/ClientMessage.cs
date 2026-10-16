@@ -27,7 +27,7 @@ namespace YuJanggi.Protocol.Messages
         PassTurnRequest         = 304,
         RematchRequest          = 305,
 
-        ChatRequest             = 306,
+        ChatRequest             = 401,
     }
     /// <summary>
     /// [Type]
