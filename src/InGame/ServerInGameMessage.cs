@@ -16,10 +16,7 @@ namespace YuJanggi.Protocol.InGame
     }
 
     public enum ProtocolTurnAction
-    {
-        Move,
-        Pass
-    }
+    { Move, Pass }
 
     public sealed record TurnCompletedEvent
     {
@@ -34,11 +31,7 @@ namespace YuJanggi.Protocol.InGame
     }
 
     public enum GameRequestResult
-    {
-        Accepted,
-        Mismatch,
-        Failed
-    }
+    { Accepted, Mismatch, Failed }
     public sealed record GameRequestResponse
     {
         public GameRequestResult Result { get; init; }

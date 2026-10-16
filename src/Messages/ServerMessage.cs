@@ -37,6 +37,7 @@ namespace YuJanggi.Protocol.Messages
         RematchResponse         = 308, // GameRequestResponse: 요청 접수 결과 → 보낸 사람
         RematchConfirmedEvent   = 309, // 양쪽 동의 완료 → 양쪽
 
+        // Chat
         ChatResponse            = 400,
         ChatEvent               = 401,
 
